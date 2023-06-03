@@ -45,25 +45,25 @@
 <!-- JS UI Start -->
 <script>
     const socket = io();
-    const width = document.body.scrollWidth;
-    const height = document.body.scrollHeight;
-
-    let circlesJSON = { circles: [], height: height, width: width }; // create an empty JSON object
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
-
     confirm.onclick = function () {
+        let width = document.body.scrollWidth;
+        let height = document.body.scrollHeight;
+
+        let circlesJSON = { circles: [], height: height, width: width }; // create an empty JSON object
+
         positions.innerHTML = '';
         for (let i = 0; i < ball_n.value; ++i) {
             let x = getRandomInt(width);
             let y = getRandomInt(height);
-            let r = getRandomInt(height/8);
+            let r = getRandomInt(height / 8);
 
-            positions.innerHTML += 
-            `<div class="col-4">
+            positions.innerHTML +=
+                `<div class="col-4">
             <label for="ballx${i}" class="form-label" id="ballx${i}_">Ball ${i} X: ${x}</label>
             <input type="range" class="form-range" min="0" max="${width}" step="1" value="${x}" id="ballx${i}">
             </div>
@@ -73,9 +73,9 @@
             </div>
             <div class="col-4">
             <label for="ballr${i}" class="form-label" id="ballr${i}_">Ball ${i} R: ${r}</label>
-            <input type="range" class="form-range" min="1" max="${height/3}" step="1" value="${r}" id="ballr${i}">
+            <input type="range" class="form-range" min="1" max="${height / 3}" step="1" value="${r}" id="ballr${i}">
             </div>`;
-            
+
             // create a new circle object with x, y, and radius properties
             let circle = { id: i, x: x, y: y, r: r };
             // add the circle object to the JSON array
