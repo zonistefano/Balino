@@ -1,0 +1,8 @@
+runtime: python311 # or another supported version
+entrypoint: python app.py
+
+handlers:
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
