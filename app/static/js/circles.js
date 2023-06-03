@@ -8,7 +8,7 @@ socket.on('disconnect', function () {
     console.log('disconnected...')
 });
 
-const FPS = 2;
+const FPS = 20;
 setInterval(() => {
     if (playing) {
         sendImg()

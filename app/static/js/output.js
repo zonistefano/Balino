@@ -10,8 +10,6 @@ socket.on('disconnect', function () {
 });
 
 socket.on('circles_draw', function (c) {
-    console.log('------')
-    console.log(c)
     output.height = c.height;
     output.width = c.width;
     ctx.clearRect(0, 0, c.width, c.height);

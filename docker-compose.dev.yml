@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+ opencv:
+  build:
+   context: .
+  ports:
+  - 9000:9000
+  volumes:
+  - ./:/app
+  command: python wsgi.py 9000
+  deploy:
+    restart_policy:
+      condition: any
+      delay: 5s
+      window: 60s
