@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Balino - Output</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://cdn.socket.io/4.6.0/socket.io.js"></script>
+</head>
+
+<body>
+    <!-- Content -->
+    <!-- <div id="div_out"></div> -->
+    <canvas id="output"></canvas>
+    <!-- Content End -->
+
+    <!-- Style Start -->
+    <style>
+        html,
+        body {
+            margin: 0px;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <!-- Style End -->
+
+    <!-- JS Elements Start -->
+    <script>
+        const div_out = document.getElementById('div_out')
+        const output = document.getElementById('output')
+        const ctx = output.getContext("2d");
+    </script>
+    <!-- JS Elements End -->
+
+    <!-- JS Import Start -->
+    <script src="/static/js/output.js"></script>
+    <!-- JS Import End -->
+</body>
