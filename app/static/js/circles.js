@@ -47,7 +47,6 @@ function eval() {
         // add the circle object to the JSON array
         circlesJSON.circles.push(circle);
     }
-    socket.emit('circles', circlesJSON)
-    console.log(circlesJSON)
+    socket.emit('circles', circlesJSON);
     src.delete(); circles.delete();
 }
