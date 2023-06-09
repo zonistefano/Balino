@@ -1,20 +1,147 @@
-{% extends "_layout.html" %}
-{% block title %}Home{% endblock %}
-{% block home %}active{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block content %}
-<!-- Content -->
-<div class="container">
-    <h1>Balino Project</h1>
-    <h3>by ...</h2>
-</div>
-</div>
-<!-- Content End -->
+<head>
+    <meta charset="UTF-8">
+    <title>Balino - Input</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.socket.io/4.6.0/socket.io.js"></script>
+</head>
+
+<body style="height: 100vh;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <!-- Navbar content -->
+        <div class="container-fluid">
+            <a class="navbar-brand" href="./">Balino</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="./">Input</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="./output" target=”_blank”>OutPut</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Content Start -->
+    <div class="container">
+        <!-- Settings Start -->
+        <div class="row py-2">
+            <div class="col">
+                <label for="ball_n" class="form-label">Select Number of balls:</label>
+                <select class="form-select" id="ball_n">
+                    <option selected>1</option>
+                    <option>5</option>
+                    <option>8</option>
+                    <option>10</option>
+                </select>
+            </div>
+            <div class="col-auto align-self-end">
+                <button type="button" class="btn btn-primary" id="confirm">Confirm</button>
+            </div>
+        </div>
+        <div class="row py-2 g-2 justify-content-around" id="positions">
+        </div>
+        <!-- Settings End -->
+    </div>
+    <!-- Content End -->
 
 
-<!-- JS Import Start -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-    crossorigin="anonymous"></script>
-<!-- JS Import End -->
-{% endblock %}
+    <!-- JS Elements Start -->
+    <script>
+        const confirm = document.getElementById("confirm");
+        const positions = document.getElementById("positions");
+        const ball_n = document.getElementById('ball_n');
+    </script>
+    <!-- JS Elements End -->
+
+    <!-- JS UI Start -->
+    <script>
+        const socket = io();
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        confirm.onclick = function () {
+            let width = document.body.scrollWidth;
+            let height = document.body.scrollHeight;
+
+            let circlesJSON = { circles: [], height: height, width: width }; // create an empty JSON object
+
+            positions.innerHTML = '';
+            for (let i = 0; i < ball_n.value; ++i) {
+                let x = getRandomInt(width);
+                let y = getRandomInt(height);
+                let r = getRandomInt(height / 8);
+
+                positions.innerHTML +=
+                    `<div class="col-4">
+            <label for="ballx${i}" class="form-label" id="ballx${i}_">Ball ${i} X: ${x}</label>
+            <input type="range" class="form-range" min="0" max="${width}" step="1" value="${x}" id="ballx${i}">
+            </div>
+            <div class="col-4">
+            <label for="bally${i}" class="form-label" id="bally${i}_">Ball ${i} Y: ${y}</label>
+            <input type="range" class="form-range" min="0" max="${height}" step="1" value="${y}" id="bally${i}">
+            </div>
+            <div class="col-4">
+            <label for="ballr${i}" class="form-label" id="ballr${i}_">Ball ${i} R: ${r}</label>
+            <input type="range" class="form-range" min="1" max="${height / 3}" step="1" value="${r}" id="ballr${i}">
+            </div>`;
+
+                // create a new circle object with x, y, and radius properties
+                let circle = { id: i, x: x, y: y, r: r };
+                // add the circle object to the JSON array
+                circlesJSON.circles.push(circle);
+            }
+            socket.emit('circles', circlesJSON)
+            for (let i = 0; i < ball_n.value; ++i) {
+                let ballx = document.getElementById(`ballx${i}`);
+                let ballxLabel = document.getElementById(`ballx${i}_`);
+                ballx.addEventListener('input', function () {
+                    ballxLabel.innerHTML = `Ball ${i} X: ${ballx.value}`;
+                    circlesJSON.circles[i].x = ballx.value;
+                    socket.emit('circles', circlesJSON)
+                });
+
+                let bally = document.getElementById(`bally${i}`);
+                let ballyLabel = document.getElementById(`bally${i}_`);
+                bally.addEventListener('input', function () {
+                    ballyLabel.innerHTML = `Ball ${i} Y: ${bally.value}`;
+                    circlesJSON.circles[i].y = bally.value;
+                    socket.emit('circles', circlesJSON)
+                });
+
+                let ballr = document.getElementById(`ballr${i}`);
+                let ballrLabel = document.getElementById(`ballr${i}_`);
+                ballr.addEventListener('input', function () {
+                    ballrLabel.innerHTML = `Ball ${i} R: ${ballr.value}`;
+                    circlesJSON.circles[i].r = ballr.value;
+                    socket.emit('circles', circlesJSON)
+                });
+            }
+        };
+    </script>
+    <!-- JS UI End -->
+
+    <!-- JS Import Start -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <!-- JS Import End -->
+</body>
+
+</html>

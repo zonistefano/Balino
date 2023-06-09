@@ -10,8 +10,7 @@
 </head>
 
 <body>
-    <!-- Content -->
-    <!-- <div id="div_out"></div> -->
+    <!-- Content Start -->
     <canvas id="output"></canvas>
     <!-- Content End -->
 
@@ -37,7 +36,28 @@
     </script>
     <!-- JS Elements End -->
 
-    <!-- JS Import Start -->
-    <script src="./static/js/output.js"></script>
-    <!-- JS Import End -->
+    <!-- JS Start -->
+    <script>
+        const socket = io();
+
+        socket.on('connect', function () {
+            console.log('connected...')
+            socket.emit('output_id', '')
+        });
+
+        socket.on('circles_draw', function (c) {
+            output.height = c.height;
+            output.width = c.width;
+            ctx.clearRect(0, 0, c.width, c.height);
+            c["circles"].forEach((cerchio) => {
+                ctx.beginPath();
+                ctx.arc(cerchio["x"], cerchio["y"], cerchio["r"], 0, 2 * Math.PI);
+                ctx.strokeStyle = "red";
+                ctx.stroke();
+                ctx.fillStyle = cerchio["color"];
+                ctx.fill();
+            });
+        });
+    </script>
+    <!-- JS End -->
 </body>
