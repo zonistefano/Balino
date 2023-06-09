@@ -54,7 +54,12 @@
                 ctx.arc(cerchio["x"], cerchio["y"], cerchio["r"], 0, 2 * Math.PI);
                 ctx.strokeStyle = "red";
                 ctx.stroke();
-                ctx.fillStyle = cerchio["color"];
+                if (cerchio["id"] % 2 === 0) { // if even
+                    ctx.fillStyle = "#B1A6FF"; 
+                }
+                else {
+                    ctx.fillStyle = "#4EFF80";
+                }
                 ctx.fill();
             });
         });
