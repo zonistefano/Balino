@@ -88,11 +88,11 @@
                 let y = getRandomInt(height);
 
                 positions.innerHTML +=
-                    `<div class="col-4">
+                    `<div class="col-6">
             <label for="ballx${i}" class="form-label" id="ballx${i}_">Ball ${i} X: ${x}</label>
             <input type="range" class="form-range" min="0" max="${width}" step="1" value="${x}" id="ballx${i}">
             </div>
-            <div class="col-4">
+            <div class="col-6">
             <label for="bally${i}" class="form-label" id="bally${i}_">Ball ${i} Y: ${y}</label>
             <input type="range" class="form-range" min="0" max="${height}" step="1" value="${y}" id="bally${i}">
             </div>`;
