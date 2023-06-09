@@ -86,7 +86,6 @@
             for (let i = 0; i < ball_n.value; ++i) {
                 let x = getRandomInt(width);
                 let y = getRandomInt(height);
-                let r = getRandomInt(height / 8);
 
                 positions.innerHTML +=
                     `<div class="col-4">
@@ -96,14 +95,10 @@
             <div class="col-4">
             <label for="bally${i}" class="form-label" id="bally${i}_">Ball ${i} Y: ${y}</label>
             <input type="range" class="form-range" min="0" max="${height}" step="1" value="${y}" id="bally${i}">
-            </div>
-            <div class="col-4">
-            <label for="ballr${i}" class="form-label" id="ballr${i}_">Ball ${i} R: ${r}</label>
-            <input type="range" class="form-range" min="1" max="${height / 3}" step="1" value="${r}" id="ballr${i}">
             </div>`;
 
                 // create a new circle object with x, y, and radius properties
-                let circle = { id: i, x: x, y: y, r: r };
+                let circle = { id: i, x: x, y: y};
                 // add the circle object to the JSON array
                 circlesJSON.circles.push(circle);
             }
@@ -122,14 +117,6 @@
                 bally.addEventListener('input', function () {
                     ballyLabel.innerHTML = `Ball ${i} Y: ${bally.value}`;
                     circlesJSON.circles[i].y = bally.value;
-                    socket.emit('circles', circlesJSON)
-                });
-
-                let ballr = document.getElementById(`ballr${i}`);
-                let ballrLabel = document.getElementById(`ballr${i}_`);
-                ballr.addEventListener('input', function () {
-                    ballrLabel.innerHTML = `Ball ${i} R: ${ballr.value}`;
-                    circlesJSON.circles[i].r = ballr.value;
                     socket.emit('circles', circlesJSON)
                 });
             }
