@@ -5,10 +5,7 @@
     <meta charset="UTF-8">
     <title>Balino - Output</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <script src="https://cdn.socket.io/4.6.0/socket.io.js"></script>
-</head>
-
+    <link rel="icon" type="image/x-icon" href="./static/favicon.ico"></head>
 <body>
     <!-- Content Start -->
     <canvas id="output"></canvas>
@@ -33,13 +30,13 @@
         const div_out = document.getElementById('div_out')
         const output = document.getElementById('output')
         const ctx = output.getContext("2d");
-        const channel = new BroadcastChannel('app-data');
+        const channel = new BroadcastChannel('app-data'); // Create a BroadcastChannel instance to receive messages from input tab
     </script>
     <!-- JS Elements End -->
 
     <!-- JS Start -->
     <script>
-        channel.addEventListener('message', (event) => {
+        channel.addEventListener('message', (event) => { // Listen for messages from other tab
             var c = event.data;
             output.height = c.height;
             output.width = c.width;
