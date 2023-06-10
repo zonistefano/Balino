@@ -33,29 +33,24 @@
         const div_out = document.getElementById('div_out')
         const output = document.getElementById('output')
         const ctx = output.getContext("2d");
+        const channel = new BroadcastChannel('app-data');
     </script>
     <!-- JS Elements End -->
 
     <!-- JS Start -->
     <script>
-        const socket = io();
-
-        socket.on('connect', function () {
-            console.log('connected...')
-            socket.emit('output_id', '')
-        });
-
-        socket.on('circles_draw', function (c) {
+        channel.addEventListener('message', (event) => {
+            var c = event.data;
             output.height = c.height;
             output.width = c.width;
             ctx.clearRect(0, 0, c.width, c.height);
             c["circles"].forEach((cerchio) => {
                 ctx.beginPath();
                 ctx.arc(cerchio["x"], cerchio["y"], 30, 0, 2 * Math.PI); // (x, y, radius, startAngle, endAngle)
-              
+
                 if (cerchio["id"] % 2 === 0) { // if even
                     ctx.strokeStyle = "#B1A6FF";
-                    ctx.fillStyle = "#B1A6FF"; 
+                    ctx.fillStyle = "#B1A6FF";
                 }
                 else {
                     ctx.strokeStyle = "#4EFF80";

@@ -28,7 +28,7 @@
                         <a class="nav-link active" aria-current="page" href="./">Input</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="./output" target=”_blank”>OutPut</a>
+                        <a class="nav-link" aria-current="page" href="./output.html" target=”_blank”>OutPut</a>
                     </li>
                 </ul>
             </div>
@@ -65,12 +65,12 @@
         const confirm = document.getElementById("confirm");
         const positions = document.getElementById("positions");
         const ball_n = document.getElementById('ball_n');
+        const channel = new BroadcastChannel('app-data');
     </script>
     <!-- JS Elements End -->
 
     <!-- JS UI Start -->
     <script>
-        const socket = io();
 
         function getRandomInt(max) {
             return Math.floor(Math.random() * max);
@@ -102,14 +102,14 @@
                 // add the circle object to the JSON array
                 circlesJSON.circles.push(circle);
             }
-            socket.emit('circles', circlesJSON)
+            channel.postMessage(circlesJSON);
             for (let i = 0; i < ball_n.value; ++i) {
                 let ballx = document.getElementById(`ballx${i}`);
                 let ballxLabel = document.getElementById(`ballx${i}_`);
                 ballx.addEventListener('input', function () {
                     ballxLabel.innerHTML = `Ball ${i} X: ${ballx.value}`;
                     circlesJSON.circles[i].x = ballx.value;
-                    socket.emit('circles', circlesJSON)
+                    channel.postMessage(circlesJSON);
                 });
 
                 let bally = document.getElementById(`bally${i}`);
@@ -117,7 +117,7 @@
                 bally.addEventListener('input', function () {
                     ballyLabel.innerHTML = `Ball ${i} Y: ${bally.value}`;
                     circlesJSON.circles[i].y = bally.value;
-                    socket.emit('circles', circlesJSON)
+                    channel.postMessage(circlesJSON);
                 });
             }
         };
